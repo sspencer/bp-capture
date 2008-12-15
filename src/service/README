@@ -13,4 +13,4 @@ How to get the service installed:
 3. copy the BrowserProfiler service into
   ~/Library/Application\ Support/Yahoo\!/BrowserPlus/Corelets/ScreenCapture/0.0.1/
 4. restart browserplus (can do it from system preferences -> BrowserPlus)
-5. open test service_test.htm
+5. open tests/index.html
