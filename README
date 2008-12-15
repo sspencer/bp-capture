@@ -1,8 +1,29 @@
-Proof of concept that adds a screen capture service to your browser.  This will only run on Intel Macs in Firefox or Safari.  You must have BrowserPlus (http://browserplus.yahoo.com/) installed.
+BrowserPlus Screen Capture Service
 
-Q: Why screen capture from your browser?  
-A: One idea is that it'd make it easier to submit more detailed bug reports.
+Proof of concept that adds a screen capture service to your browser.  This only runs 
+in Firefox and Safari on Intel Macs with BrowserPlus (http://browserplus.yahoo.com/).
+The service only offers an interactive screen screen shot (user specifies area to
+capture).  Once captured, you can display the capture with the FileAccess service.
 
-Q: Why only Mac OS X?  I have BrowserPlus installed on Windows.
-A: OS X has a command line program "screencapture" that makes this really easy.  This is just a proof of concept.
+-------------------------------------------------------------------------------------------
+// Note: that this Javascript is incomplete, you must call init and require.  See 
+// actual source for working example.
+
+// Note: All calls into BrowserPlus are asynchronous, hence the function passed
+// into each call.
+
+// take screenshot from javascript
+BrowserPlus.ScreenCapture.interactive({ callback: mycb}, function(r){
+    if (r.success) {
+        // display screenshoot
+    }
+});
+
+// display screenshot
+BrowserPlus.FileAccess.GetURL( {file: path}, function(r) {
+    if (r.success) {  
+        document.getElementById("result").innerHTML = '<img src=\"' + r.value + '\">';
+    }
+});
+
 

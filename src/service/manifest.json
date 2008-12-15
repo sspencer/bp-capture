@@ -1,0 +1,16 @@
+{
+	"type": "dependent",
+	"uses": {
+		"corelet": "RubyInterpreter",
+		"version": "4"
+	},
+	"arguments": {
+	  "ScriptFile": "ScreenCapture.rb"
+	},
+    "strings": {
+        "en": {
+            "title": "Screen Capture",
+            "summary": "A service that allows the user to interactively take a screenshot of a portion of the screen."
+        }
+    }
+}

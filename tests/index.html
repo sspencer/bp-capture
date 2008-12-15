@@ -1,0 +1,98 @@
+<html>  
+<head>
+    <title>BrowserPlus Screen Capture</title>
+    <style type="text/css" media="screen">
+        #countdown {
+            text-align:center;
+            margin:auto;
+            width:100px;
+            height:100px;
+            font-size:64pt;
+        }
+
+        .wait { background: #ccc; border:3px solid #fff;}
+        .flash { background: #ff3; border:3px dotted #000;}
+        
+        #control {
+            margin-top:10px;
+            text-align:center;
+        }
+        
+        h1 { font-size:16pt;letter-spacing:1px;}
+    </style>
+</head>  
+<body>  
+
+    <p>
+        The ScreenCapture service allows you to interactively take a screenshot from your browser.  This is 
+        a proof of concept and only runs on Mac OS X (which offers <code>screencapture</code>).  Just press
+        <strong>Take a Screen Shot...</strong> and after a 3 second countdown, select an area of the 
+        screen to capture and the result is shown below.  
+    </p>
+    <div id="countdown" class="wait">...</div>
+    <div id="control">
+        <input id="bcapture" type="button" value="Take a Screen Shot...">
+    </div>
+    <h1>Screen Capture:</h1>
+    <div id="result"></div>
+
+    <script type="text/javascript" src="http://bp.yahooapis.com/2.1.11/browserplus-min.js"></script>  
+    <script type="text/javascript">  
+
+    var GoodToGo = false;
+
+    BrowserPlus.init(function(res) {  
+        var screenService = {service: "ScreenCapture", version: "0", minversion: "0.0.1"},
+            fileService = {service: 'FileAccess', version: "1"};
+            
+        if (res.success) {  
+            BrowserPlus.require({ services: [ screenService, fileService ]}, function(r) {
+                GoodToGo = r.success;
+                if (!r.success) {  
+                    err("REQUIRE", r);
+                }
+            });
+        } else {
+            err("INIT", res);
+        }
+    });
+
+    var mycb = function(r) {
+        console.log("count: " + r);
+        document.getElementById('countdown').innerHTML = r;
+        document.getElementById('countdown').className = (r > 0 ? "wait" : "flash");
+    };
+
+    var err = function(f, result) {
+        console.log(f + " Error: " + result.error + (result.verboseError ? (": " + result.verboseError) : ""));
+    };
+
+    var displayCapture = function(path) {
+        BrowserPlus.FileAccess.GetURL( {file: path}, function(r) {
+            if (r.success) {  
+                console.log("display: " + r.value);
+                document.getElementById("result").innerHTML = '<img src=\"' + r.value + '\">';
+            } else {
+                err("DISPLAY", r);
+            }
+        });
+    };
+
+    document.getElementById('bcapture').onclick=function(e) {
+        if (GoodToGo) {
+            console.log("starting to take picture");
+            BrowserPlus.ScreenCapture.interactive({ callback: mycb}, function(x){
+                document.getElementById('countdown').innerHTML = "...";
+                document.getElementById('countdown').className = "wait";
+                if (x.success) {
+                    displayCapture(x.value);
+                } else {
+                    err("SNAP", x)
+                }
+            });
+        }
+    };
+
+    </script>  
+</body>  
+</html>
